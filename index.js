@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 import { typeDefs } from "./graphql/typeDefs.js";
+import { resolvers } from "./graphql/resolvers/index.js";
 
 dotenv.config();
 
@@ -13,7 +14,7 @@ const PORT = process.env.port || 5000;
 
 const server = new ApolloServer({
   typeDefs,
-  // resolvers,
+  resolvers,
   context: ({ req }) => ({ req, pubsub }),
 });
 

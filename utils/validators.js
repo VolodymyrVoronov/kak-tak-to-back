@@ -5,7 +5,7 @@ export const validateRegistrationInput = (userLogin, password, confirmPassword) 
     errors.userLogin = "Логин не должен быть пустым.";
   }
 
-  if (userLogin.length < 5) {
+  if (userLogin.length <= 5) {
     errors.userLoginLength = "Логин не должен быть меньше 5 символов.";
   }
 

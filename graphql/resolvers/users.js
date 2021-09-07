@@ -1,8 +1,8 @@
-import { bcrypt } from "bcryptjs";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { UserInputError } from "apollo-server-errors";
+import { UserInputError } from "apollo-server";
 
-import { User } from "./../../models/User.js";
+import User from "./../../models/User.js";
 
 import { validateRegistrationInput, validateLoginInput } from "./../../utils/validators.js";
 
@@ -16,7 +16,7 @@ const generateToken = (user) =>
     { expiresIn: "1h" }
   );
 
-export const Mutation = {
+export const userResolvers = {
   async login(_, { userLogin, password }) {
     const { errors, valid } = validateLoginInput(userLogin, password);
 
