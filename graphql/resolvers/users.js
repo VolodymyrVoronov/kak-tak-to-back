@@ -24,13 +24,13 @@ export const userResolvers = {
 
     const user = await User.findOne({ userLogin });
     if (!user) {
-      errors.general = "Пользователь не найден.";
+      errors.userNotFound = "Пользователь не найден.";
       throw new UserInputError("Пользователь не найден.", { errors });
     }
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-      errors.general = "Ошибка авторизации.";
+      errors.wrongCredentials = "Ошибка авторизации.";
       throw new UserInputError("Ошибка авторизации.", { errors });
     }
 
