@@ -17,62 +17,64 @@ const generateToken = (user) =>
   );
 
 export const userResolvers = {
-  async login(_, { userLogin, password }) {
-    const { errors, valid } = validateLoginInput(userLogin, password);
+  Mutation: {
+    async login(_, { userLogin, password }) {
+      const { errors, valid } = validateLoginInput(userLogin, password);
 
-    if (!valid) throw new UserInputError("Errors", { errors });
+      if (!valid) throw new UserInputError("Errors", { errors });
 
-    const user = await User.findOne({ userLogin });
-    if (!user) {
-      errors.userNotFound = "Пользователь не найден.";
-      throw new UserInputError("Пользователь не найден.", { errors });
-    }
+      const user = await User.findOne({ userLogin });
+      if (!user) {
+        errors.userNotFound = "Пользователь не найден.";
+        throw new UserInputError("Пользователь не найден.", { errors });
+      }
 
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) {
-      errors.wrongCredentials = "Ошибка авторизации.";
-      throw new UserInputError("Ошибка авторизации.", { errors });
-    }
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) {
+        errors.wrongCredentials = "Ошибка авторизации.";
+        throw new UserInputError("Ошибка авторизации.", { errors });
+      }
 
-    const token = generateToken(user);
+      const token = generateToken(user);
 
-    return {
-      ...user._doc,
-      id: user._id,
-      token,
-    };
-  },
+      return {
+        ...user._doc,
+        id: user._id,
+        token,
+      };
+    },
 
-  async registration(_, { registrationInput: { userLogin, password, confirmPassword } }) {
-    const { valid, errors } = validateRegistrationInput(userLogin, password, confirmPassword);
+    async registration(_, { registrationInput: { userLogin, password, confirmPassword } }) {
+      const { valid, errors } = validateRegistrationInput(userLogin, password, confirmPassword);
 
-    if (!valid) throw new UserInputError("Errors", { errors });
+      if (!valid) throw new UserInputError("Errors", { errors });
 
-    const user = await User.findOne({ userLogin });
-    if (user) {
-      throw new UserInputError("Этот логин уже занят.", {
-        errors: {
-          userLogin: "Этот логин уже занят.",
-        },
+      const user = await User.findOne({ userLogin });
+      if (user) {
+        throw new UserInputError("Этот логин уже занят.", {
+          errors: {
+            userLogin: "Этот логин уже занят.",
+          },
+        });
+      }
+
+      password = await bcrypt.hash(password, 12);
+
+      const newUser = new User({
+        userLogin,
+        password,
+        createdAt: new Date().toISOString(),
       });
-    }
 
-    password = await bcrypt.hash(password, 12);
+      const res = await newUser.save();
 
-    const newUser = new User({
-      userLogin,
-      password,
-      createdAt: new Date().toISOString(),
-    });
+      const token = generateToken(res);
 
-    const res = await newUser.save();
-
-    const token = generateToken(res);
-
-    return {
-      ...res._doc,
-      id: res._id,
-      token,
-    };
+      return {
+        ...res._doc,
+        id: res._id,
+        token,
+      };
+    },
   },
 };
