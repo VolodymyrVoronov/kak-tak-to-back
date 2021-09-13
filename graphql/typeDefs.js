@@ -37,14 +37,14 @@ export const typeDefs = gql`
     registration(registrationInput: RegistrationInput): User!
     login(userLogin: String!, password: String!): User!
     createPost(postText: String!): Post!
-    deletePost(postId: ID!): String!
-    createComment(postId: String!, commentText: String!): Post!
-    deleteComment(postId: ID!, commentId: ID!): Post!
-    likePost(postId: ID!): Post!
+    deletePost(id: ID!): String!
+    createComment(id: String!, commentText: String!): Post!
+    deleteComment(id: ID!, commentId: ID!): Post!
+    likePost(id: ID!): Post!
   }
   type Query {
     getPosts: [Post]
-    getPost(postId: ID!): Post
+    getPost(id: ID!): Post
   }
   type Subscription {
     newPost: Post!

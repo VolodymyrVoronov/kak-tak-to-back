@@ -7,15 +7,16 @@ export const postResolvers = {
   Query: {
     async getPosts() {
       try {
-        const posts = await Post.find().sort({ createdAt: -1 });
+        const posts = await (await Post.find().sort({ createAt: -1 })).reverse();
+
         return posts;
       } catch (error) {
         throw new Error(error);
       }
     },
-    async getPost(_, { postId }) {
+    async getPost(_, { id }) {
       try {
-        const post = await Post.findById(postId);
+        const post = await Post.findById(id);
 
         if (post) {
           return post;
@@ -39,7 +40,7 @@ export const postResolvers = {
         postText,
         user: user.id,
         userLogin: user.userLogin,
-        createdAt: new Date().toISOString(),
+        createdAt: new Date(),
       });
 
       const post = await newPost.save();
@@ -50,11 +51,11 @@ export const postResolvers = {
 
       return post;
     },
-    async deletePost(_, { postId }, context) {
+    async deletePost(_, { id }, context) {
       const user = checkAuth(context);
 
       try {
-        const post = await Post.findById(postId);
+        const post = await Post.findById(id);
 
         if (user.userLogin === post.userLogin) {
           await post.delete();
@@ -67,10 +68,10 @@ export const postResolvers = {
         throw new Error(error);
       }
     },
-    async likePost(_, { postId }, context) {
+    async likePost(_, { id }, context) {
       const { userLogin } = checkAuth(context);
 
-      const post = await Post.findById(postId);
+      const post = await Post.findById(id);
 
       if (post) {
         if (post.likes.find((like) => like.userLogin === userLogin)) {
