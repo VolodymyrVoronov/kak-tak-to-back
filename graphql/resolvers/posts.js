@@ -75,7 +75,7 @@ export const postResolvers = {
 
       if (post) {
         if (post.likes.find((like) => like.userLogin === userLogin)) {
-          post.likes === post.likes.filter((like) => like.userLogin !== userLogin);
+          post.likes = post.likes.filter((like) => like.userLogin !== userLogin);
         } else {
           post.likes.push({
             userLogin,
@@ -84,6 +84,7 @@ export const postResolvers = {
         }
 
         await post.save();
+
         return post;
       } else {
         throw new UserInputError("Сообщение не найдено.");
