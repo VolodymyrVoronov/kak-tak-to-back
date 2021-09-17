@@ -14,6 +14,7 @@ export const postResolvers = {
         throw new Error(error);
       }
     },
+
     async getPost(_, { id }) {
       try {
         const post = await Post.findById(id);
@@ -28,6 +29,7 @@ export const postResolvers = {
       }
     },
   },
+
   Mutation: {
     async createPost(_, { postText }, context) {
       const user = checkAuth(context);
@@ -51,6 +53,7 @@ export const postResolvers = {
 
       return post;
     },
+
     async deletePost(_, { id }, context) {
       const user = checkAuth(context);
 
@@ -68,6 +71,7 @@ export const postResolvers = {
         throw new Error(error);
       }
     },
+
     async likePost(_, { id }, context) {
       const { userLogin } = checkAuth(context);
 
@@ -91,6 +95,7 @@ export const postResolvers = {
       }
     },
   },
+
   Subscription: {
     newPost: {
       subscribe: (_, __, { pubsub }) => pubsub.asyncIterator("NEW_POST"),

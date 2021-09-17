@@ -1,5 +1,6 @@
 import { userResolvers } from "./users.js";
 import { postResolvers } from "./posts.js";
+import { commentResolvers } from "./comments.js";
 
 export const resolvers = {
   Post: {
@@ -9,6 +10,7 @@ export const resolvers = {
   Mutation: {
     ...userResolvers.Mutation,
     ...postResolvers.Mutation,
+    ...commentResolvers.Mutation,
   },
   Query: {
     ...postResolvers.Query,

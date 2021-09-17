@@ -38,8 +38,8 @@ export const typeDefs = gql`
     login(userLogin: String!, password: String!): User!
     createPost(postText: String!): Post!
     deletePost(id: ID!): String!
-    createComment(id: String!, commentText: String!): Post!
-    deleteComment(id: ID!, commentId: ID!): Post!
+    writeComment(id: String!, commentText: String!): Post!
+    deleteComment(postId: ID!, id: ID!): Post!
     likePost(id: ID!): Post!
   }
   type Query {
