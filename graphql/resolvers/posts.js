@@ -7,7 +7,7 @@ export const postResolvers = {
   Query: {
     async getPosts() {
       try {
-        const posts = await (await Post.find().sort({ createAt: -1 })).reverse();
+        const posts = (await Post.find().sort({ createAt: -1 })).reverse();
 
         return posts;
       } catch (error) {
